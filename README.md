@@ -26,5 +26,5 @@ buf generate
 3. Run the server
 
 ```bash
-go run cmd/server/main.go
+go run cmd/dex-http-server/main.go
 ```
