@@ -1,0 +1,31 @@
+services:
+  dex:
+    restart: always
+    container_name: dex
+    image: dexidp/dex:latest
+    volumes:
+      - ./configs/config.yaml:/etc/dex/config.docker.yaml
+    ports:
+      - 5556:5556
+  dex-http-server:
+    restart: always
+    container_name: dex-http-server
+    build: .
+    ports:
+      - 8081:8081
+  example-app:
+    container_name: example-app
+    restart: always
+    image: ghcr.io/dexidp/example-app:latest
+    depends_on:
+      - dex
+    ports:
+      - 5555:5555
+    entrypoint:
+      [
+        "example-app",
+        "--issuer",
+        "http://dex:5556/dex",
+        "--listen",
+        "http://0.0.0.0:5555",
+      ]
