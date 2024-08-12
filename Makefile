@@ -25,7 +25,7 @@ clean: ## Clean out the binary
 
 .PHONY: up
 up: ## Run the project in docker containers
-	@docker compose up
+	@docker compose up --build
 
 .PHONY: docker-build
 docker-build: ## Build the docker image

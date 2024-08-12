@@ -1,4 +1,36 @@
-## Setup
+# dex-http-server
+
+This project is setup to generate an HTTP server interface for the Dex gRPC user
+management API. This is a very simple project that pulls the protobuf definitions
+from the Dex project and generates an image for the HTTP server whenever Dex
+creates a release.
+
+## Development
+
+To develop this project, you will need to have the following installed:
+
+- Go 1.22+
+- Docker
+- Docker Compose
+
+The `Makefile` for the project has a `help` command that gives an overview of
+the available commands.
+
+```bash
+make help
+```
+
+To start the development environment, run the following command:
+
+```bash
+make up
+```
+
+This will run the `docker-compose.yml` file and start the development environment
+with Dex with its gRPC server running, the Dex example app for testing authentication,
+and the HTTP server(this repo) running.
+
+## Automation Notes
 
 1. Install the deps
 

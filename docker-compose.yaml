@@ -10,6 +10,8 @@ services:
   dex-http-server:
     restart: always
     container_name: dex-http-server
+    depends_on:
+      - dex
     build: .
     ports:
       - 8081:8081
