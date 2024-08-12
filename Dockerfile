@@ -8,6 +8,8 @@ ENV GRPC_SERVER_ADDRESS dex:5557
 WORKDIR /app
 COPY . /app
 
-RUN go build -o bin/dex-http-server ./cmd/dex-http-server/main.go
+RUN apk add make git
+
+RUN make build
 
 ENTRYPOINT /app/bin/dex-http-server --http-port=${HTTP_SERVER_PORT} --grpc-server=${GRPC_SERVER_ADDRESS}
