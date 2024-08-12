@@ -6,9 +6,9 @@ COMMIT := $(shell git rev-parse HEAD)
 DATE := $(shell date -u '+%Y-%m-%d')
 LDFLAGS=-ldflags \
 				" \
-				-X github.com/nwneisen/dex-http-server/cmd/dex-http-server/main.version=${VERSION} \
-				-X github.com/nwneisen/dex-http-server/cmd/dex-http-server/main.commit=${COMMIT} \
-				-X github.com/nwneisen/dex-http-server/cmd/dex-http-server/main.date=${DATE} \
+				-X github.com/nwneisen/dex-http-server/cmd/main.version=${VERSION} \
+				-X github.com/nwneisen/dex-http-server/cmd/main.commit=${COMMIT} \
+				-X github.com/nwneisen/dex-http-server/cmd/main.date=${DATE} \
 				"
 
 .PHONY: help
