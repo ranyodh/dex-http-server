@@ -19,6 +19,8 @@ var (
 	grpcServerEndpoint = flag.String("grpc-server", "dex:5557", "gRPC server endpoint")
 	// HTTP server port
 	port = flag.String("http-port", "8080", "HTTP server port")
+
+	version, commit, date = "", "", "" // These are always injected at build time
 )
 
 func run() error {
@@ -37,12 +39,17 @@ func run() error {
 	log.Info().Msgf("Registered gRPC server endpoint: %s", *grpcServerEndpoint)
 
 	// Start HTTP server (and proxy calls to gRPC server endpoint)
-	log.Info().Msgf("Starting HTTP server on %s", *port)
+	log.Info().Msgf("Running HTTP server on %s", *port)
 	return http.ListenAndServe(":"+*port, mux)
 }
 
 func main() {
 	flag.Parse()
+
+	log.Info().Msg("Starting dex-http-server")
+	log.Info().Msgf("Version: %s", version)
+	log.Info().Msgf("Commit: %s", commit)
+	log.Info().Msgf("Date: %s", date)
 
 	if err := run(); err != nil {
 		grpclog.Fatal(err)
