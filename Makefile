@@ -37,6 +37,9 @@ docker-clean: ## Clean out the docker image
 
 ##@ Testing
 
+.PHONY: test
+test: fmt vet static ## Run all tests
+
 .PHONY: fmt
 fmt: ## Run go fmt against code.
 	@go fmt ${MAIN}
@@ -47,12 +50,16 @@ vet: ## Run go vet against code.
 
 .PHONY: static
 static: ## Run staticcheck against code.
-	@staticcheck ${MAIN}
+	@staticcheck -checks "all" ${MAIN}
 
 ##@ Dependencies
 
 .PHONY: deps
 deps: staticcheck ## Install all of hte needed dependencies
+
+.PHONY: ginkgo
+ginkgo: ## Install staticcheck - doesn't work
+	@go install github.com/onsi/ginkgo/v2/ginkgo
 
 .PHONY: staticcheck
 staticcheck: ## Install staticcheck

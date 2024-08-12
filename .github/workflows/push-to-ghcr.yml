@@ -1,0 +1,121 @@
+name: Push docker images
+
+on:
+  workflow_call:
+
+jobs:
+  push-latest:
+    if: ${{ github.event_name == 'release' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Load environment
+        uses: c-py/action-dotenv-to-setenv@v4
+        with:
+          env-file: .github/development.env
+
+      - name: Download artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: ${{ env.IMAGE }}
+          path: /tmp
+
+      - name: Load docker image
+        working-directory: .
+        run: docker load --input /tmp/${{ env.IMAGE }}.tar
+
+      - name: Push latest image to ${{ env.REGISTRY }}
+        working-directory: .
+        run: |
+          docker tag ${{ env.REGISTRY }}/${{ env.ORG }}/${{ env.IMAGE }}:dev ${{ env.REGISTRY }}/${{ env.ORG }}/${{ env.IMAGE }}:latest
+          docker push ${{ env.REGISTRY }}/${{ env.ORG }}/${{ env.IMAGE }}:latest
+
+  push-semver:
+    if: ${{ github.event_name == 'release' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Load environment
+        uses: c-py/action-dotenv-to-setenv@v4
+        with:
+          env-file: .github/development.env
+
+      - name: Download artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: ${{ env.IMAGE }}
+          path: /tmp
+
+      - name: Load docker image
+        working-directory: .
+        run: docker load --input /tmp/${{ env.IMAGE }}.tar
+
+      - name: Push semver image to ${{ env.REGISTRY }}
+        working-directory: .
+        run: |
+          SEMVER=${GITHUB_REF#refs/*/}
+          echo ${{ env.REGISTRY }}/${{ env.ORG }}/${{ env.IMAGE }}:$SEMVER
+          docker tag ${{ env.REGISTRY }}/${{ env.ORG }}/${{ env.IMAGE }}:dev ${{ env.REGISTRY }}/${{ env.ORG }}/${{ env.IMAGE }}:$SEMVER
+          docker push ${{ env.REGISTRY }}/${{ env.ORG }}/${{ env.IMAGE }}:$SEMVER
+
+  push-sha:
+    if: ${{ github.event_name == 'push' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Load environment
+        uses: c-py/action-dotenv-to-setenv@v4
+        with:
+          env-file: .github/development.env
+
+      - name: Download artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: ${{ env.IMAGE }}
+          path: /tmp
+
+      - name: Load docker image
+        working-directory: .
+        run: docker load --input /tmp/${{ env.IMAGE }}.tar
+
+      - name: Push SHA image to ${{ env.REGISTRY }}
+        working-directory: .
+        run: |
+          COMMIT_SHA=$(git rev-parse --short "$GITHUB_SHA")
+          echo ${{ env.REGISTRY }}/${{ env.ORG }}/${{ env.IMAGE }}:$COMMIT_SHA
+          docker tag ${{ env.REGISTRY }}/${{ env.ORG }}/${{ env.IMAGE }}:dev ${{ env.REGISTRY }}/${{ env.ORG }}/${{ env.IMAGE }}:$COMMIT_SHA
+          docker push ${{ env.REGISTRY }}/${{ env.ORG }}/${{ env.IMAGE }}:$COMMIT_SHA
+
+  push-dev:
+    if: ${{ github.event_name == 'push' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Load environment
+        uses: c-py/action-dotenv-to-setenv@v4
+        with:
+          env-file: .github/development.env
+
+      - name: Download artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: ${{ env.IMAGE }}
+          path: /tmp
+
+      - name: Load docker image
+        working-directory: .
+        run: docker load --input /tmp/${{ env.IMAGE }}.tar
+
+      - name: Push dev image to ${{ env.REGISTRY }}
+        working-directory: .
+        run: |
+          docker tag ${{ env.REGISTRY }}/${{ env.ORG }}/${{ env.IMAGE }}:dev ${{ env.REGISTRY }}/${{ env.ORG }}/${{ env.IMAGE }}:dev
+          docker push ${{ env.REGISTRY }}/${{ env.ORG }}/${{ env.IMAGE }}:dev
