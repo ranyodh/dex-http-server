@@ -1,6 +1,7 @@
 MAIN:=cmd/dex-http-server/main.go
 
 # LDFLAGS
+VERSION:=dev
 VERSION := $(shell git tag --sort=committerdate | tail -1)
 COMMIT := $(shell git rev-parse HEAD)
 DATE := $(shell date -u '+%Y-%m-%d')
