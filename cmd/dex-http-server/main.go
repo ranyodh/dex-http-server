@@ -16,7 +16,7 @@ import (
 var (
 	// command-line options:
 	// gRPC server endpoint
-	grpcServerEndpoint = flag.String("grpc-server", "localhost:9090", "gRPC server endpoint")
+	grpcServerEndpoint = flag.String("grpc-server", "localhost:5557", "gRPC server endpoint")
 	// HTTP server port
 	port = flag.String("http-port", "8080", "HTTP server port")
 )
@@ -37,7 +37,7 @@ func run() error {
 	log.Info().Msgf("Registered gRPC server endpoint: %s", *grpcServerEndpoint)
 
 	// Start HTTP server (and proxy calls to gRPC server endpoint)
-	log.Info().Msgf("Starting HTTP server on %s", port)
+	log.Info().Msgf("Starting HTTP server on %s", *port)
 	return http.ListenAndServe(":"+*port, mux)
 }
 
