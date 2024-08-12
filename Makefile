@@ -45,11 +45,11 @@ up: ## Run the project in docker containers
 
 .PHONY: docker-build
 docker-build: ## Build the docker image
-	@docker build -t dex-http-server:${VERSION} .
+	@docker build -t ghcr.io/nwneisen/dex-http-server:${VERSION} .
 
 .PHONY: docker-clean
 docker-clean: ## Clean out the docker image
-	@docker image rm dex-http-server:${VERSION}
+	@docker image rm ghcr.io/nwneisen/dex-http-server:${VERSION}
 
 ##@ Testing
 
