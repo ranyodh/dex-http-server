@@ -16,7 +16,7 @@ import (
 var (
 	// command-line options:
 	// gRPC server endpoint
-	grpcServerEndpoint = flag.String("grpc-server", "localhost:5557", "gRPC server endpoint")
+	grpcServerEndpoint = flag.String("grpc-server", "dex:5557", "gRPC server endpoint")
 	// HTTP server port
 	port = flag.String("http-port", "8080", "HTTP server port")
 )

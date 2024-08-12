@@ -30,6 +30,16 @@ This will run the `docker-compose.yml` file and start the development environmen
 with Dex with its gRPC server running, the Dex example app for testing authentication,
 and the HTTP server(this repo) running.
 
+The HTTP server will be running on `localhost:8080`. A request can be made to
+using the following curl command:
+
+```bash
+curl localhost:8081/api.Dex/GetVersion
+```
+
+This will return the version of the Dex server that is running. Additional endpoints
+can be found in the `api/api.pb.gq.go` file.
+
 ## Automation Notes
 
 1. Install the deps
