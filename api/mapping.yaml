@@ -1,0 +1,20 @@
+type: google.api.Service
+config_version: 3
+
+http:
+  rules:
+    - selector: api.Dex.GetVersion
+      get: "/versions"
+    - selector: api.Dex.CreatePassword
+      post: "/users"
+      body: "*"
+    - selector: api.Dex.UpdatePassword
+      put: "/users/{email}"
+      body: "*"
+    - selector: api.Dex.DeletePassword
+      delete: "/users/{email}"
+    - selector: api.Dex.ListPasswords
+      get: "/users"
+    - selector: api.Dex.VerifyPassword
+      post: "/users/verify"
+      body: "*"
