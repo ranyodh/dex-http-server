@@ -1,15 +1,16 @@
-FROM golang:1.23rc2-alpine3.20
-
-# Set environment variables
-ENV HTTP_SERVER_PORT 8080
-ENV GRPC_SERVER_ADDRESS dex:5557
-
+FROM golang:1.23 AS builder
+ARG TARGETOS
+ARG TARGETARCH
 
 WORKDIR /app
 COPY . /app
+RUN CGO_ENABLED=0 GOOS=${TARGETOS:-linux} GOARCH=${TARGETARCH} go build -a -o dex-http-server cmd/main.go
 
-RUN apk add make git
+# Use distroless as minimal base image to package the manager binary
+# Refer to https://github.com/GoogleContainerTools/distroless for more details
+FROM gcr.io/distroless/static:nonroot
+WORKDIR /
+COPY --from=builder /app/dex-http-server .
+USER 65532:65532
 
-RUN make build
-
-ENTRYPOINT /app/bin/dex-http-server --http-port=${HTTP_SERVER_PORT} --grpc-server=${GRPC_SERVER_ADDRESS}
+ENTRYPOINT ["/dex-http-server"]
