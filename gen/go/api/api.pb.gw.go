@@ -551,7 +551,7 @@ func RegisterDexHandlerServer(ctx context.Context, mux *runtime.ServeMux, server
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/api.Dex/GetVersion", runtime.WithHTTPPathPattern("/versions"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/api.Dex/GetVersion", runtime.WithHTTPPathPattern("/version"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -844,7 +844,7 @@ func RegisterDexHandlerClient(ctx context.Context, mux *runtime.ServeMux, client
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/api.Dex/GetVersion", runtime.WithHTTPPathPattern("/versions"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/api.Dex/GetVersion", runtime.WithHTTPPathPattern("/version"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -944,7 +944,7 @@ var (
 
 	pattern_Dex_ListPasswords_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0}, []string{"users"}, ""))
 
-	pattern_Dex_GetVersion_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0}, []string{"versions"}, ""))
+	pattern_Dex_GetVersion_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0}, []string{"version"}, ""))
 
 	pattern_Dex_ListRefresh_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"api.Dex", "ListRefresh"}, ""))
 

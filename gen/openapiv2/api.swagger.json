@@ -173,7 +173,7 @@
         ]
       }
     },
-    "/versions": {
+    "/version": {
       "get": {
         "summary": "GetVersion returns version information of the server.",
         "operationId": "Dex_GetVersion",
