@@ -10,7 +10,7 @@ plugins:
     out: gen/go/api
     opt:
       - paths=source_relative
-      - generate_unbound_methods=true
+      - generate_unbound_methods=false
       - grpc_api_configuration=api/mapping.yaml
     include_imports: true
     strategy: all
