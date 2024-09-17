@@ -4,17 +4,17 @@ config_version: 3
 http:
   rules:
     - selector: api.Dex.GetVersion
-      get: "/version"
+      get: "/v1/version"
     - selector: api.Dex.CreatePassword
-      post: "/users"
+      post: "/v1/users"
       body: "*"
     - selector: api.Dex.UpdatePassword
-      put: "/users/{email}"
+      put: "/v1/users/{email}"
       body: "*"
     - selector: api.Dex.DeletePassword
-      delete: "/users/{email}"
+      delete: "/v1/users/{email}"
     - selector: api.Dex.ListPasswords
-      get: "/users"
+      get: "/v1/users"
     - selector: api.Dex.VerifyPassword
-      post: "/users/verify"
+      post: "/v1/users/verify"
       body: "*"

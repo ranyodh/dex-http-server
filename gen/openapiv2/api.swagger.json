@@ -16,7 +16,7 @@
     "application/json"
   ],
   "paths": {
-    "/users": {
+    "/v1/users": {
       "get": {
         "summary": "ListPassword lists all password entries.",
         "operationId": "Dex_ListPasswords",
@@ -71,7 +71,7 @@
         ]
       }
     },
-    "/users/verify": {
+    "/v1/users/verify": {
       "post": {
         "summary": "VerifyPassword returns whether a password matches a hash for a specific email or not.",
         "operationId": "Dex_VerifyPassword",
@@ -104,7 +104,7 @@
         ]
       }
     },
-    "/users/{email}": {
+    "/v1/users/{email}": {
       "delete": {
         "summary": "DeletePassword deletes the password.",
         "operationId": "Dex_DeletePassword",
@@ -173,7 +173,7 @@
         ]
       }
     },
-    "/version": {
+    "/v1/version": {
       "get": {
         "summary": "GetVersion returns version information of the server.",
         "operationId": "Dex_GetVersion",
