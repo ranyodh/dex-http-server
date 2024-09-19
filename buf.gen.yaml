@@ -13,3 +13,8 @@ plugins:
     opt:
       - paths=source_relative
       - generate_unbound_methods=true
+      - grpc_api_configuration=api/mapping.yaml
+  - plugin: openapiv2
+    out: gen/openapiv2
+    opt:
+      - grpc_api_configuration=api/mapping.yaml

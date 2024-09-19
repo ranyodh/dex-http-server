@@ -1,0 +1,36 @@
+type: google.api.Service
+config_version: 3
+
+http:
+  rules:
+    - selector: api.Dex.CreateClient
+      post: "/clients"
+      body: "*"
+    - selector: api.Dex.UpdateClient
+      put: "/clients/{id}"
+      body: "*"
+    - selector: api.Dex.DeleteClient
+      delete: "/clients/{id}"
+
+    - selector: api.Dex.CreatePassword
+      post: "/passwords"
+      body: "*"
+    - selector: api.Dex.UpdatePassword
+      put: "/passwords/{email}"
+      body: "*"
+    - selector: api.Dex.DeletePassword
+      delete: "/passwords/{email}"
+    - selector: api.Dex.ListPasswords
+      get: "/passwords"
+    - selector: api.Dex.VerifyPassword
+      post: "/passwords/verify"
+      body: "*"
+
+    - selector: api.Dex.ListRefresh
+      get: "/refresh/{user_id}"
+    - selector: api.Dex.RevokeRefresh
+      post: "/refresh/{user_id}/revoke/{client_id}"
+
+    - selector: api.Dex.GetVersion
+      get: "/version"
+
