@@ -1,0 +1,102 @@
+# generate service account
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: dex-http-server
+  namespace: mke
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: dex-http-server
+rules:
+  - apiGroups: [""]
+    resources: ["secrets"]
+    verbs: ["get"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: dex-http-server
+roleRef:
+    apiGroup: rbac.authorization.k8s.io
+    kind: ClusterRole
+    name: dex-http-server
+subjects:
+  - kind: ServiceAccount
+    name: dex-http-server
+    namespace: mke
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dex-http-server
+  namespace: mke
+spec:
+  ports:
+    - port: 80
+      targetPort: 8080
+  selector:
+    app: dex-http-server
+---
+# generate ingress
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: dex-http-server
+  namespace: mke
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+spec:
+  ingressClassName: nginx-default
+  rules:
+    - http:
+        paths:
+          - backend:
+              service:
+                name: dex-http-server
+                port:
+                  number: 80
+            path: /mke/dex(/|$)(.*)
+            pathType: Prefix
+  tls:
+    - hosts:
+        - example.com
+      secretName: auth-https.tls
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dex-http-server
+  namespace: mke
+  labels:
+    app: dex-http-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dex-http-server
+  template:
+    metadata:
+      labels:
+        app: dex-http-server
+    spec:
+      containers:
+        - name: dex-http-server
+          image: ghcr.io/ranyodh/dex-http-server:dev
+          args:
+            - "--grpc-server=authentication-dex:5557"
+            - "--http-port=8080"
+            - "--dex-grpc-cert-secret=mke/auth-grpc.tls"
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          resources:
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+            requests:
+              memory: "64Mi"
+              cpu: "250m"
+      serviceAccountName: dex-http-server
