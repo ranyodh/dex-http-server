@@ -5,6 +5,28 @@ metadata:
   name: dex-http-server
   namespace: mke
 ---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: dex-http-server
+rules:
+  - apiGroups: [ "rbac.authorization.k8s.io" ]
+    resources: ["clusterrolebindings"]
+    verbs: ["get", "list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: dex-http-server
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: dex-http-server
+subjects:
+  - kind: ServiceAccount
+    name: dex-http-server
+    namespace: mke
+---
 apiVersion: v1
 kind: Service
 metadata:
