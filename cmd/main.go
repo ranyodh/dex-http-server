@@ -14,6 +14,7 @@ import (
 	"google.golang.org/grpc/grpclog"
 
 	"github.com/mirantiscontainers/dex-http-server/gen/go/api"
+	"github.com/mirantiscontainers/dex-http-server/internal/middlewares"
 	"github.com/mirantiscontainers/dex-http-server/internal/tls"
 )
 
@@ -27,6 +28,10 @@ var (
 
 	// HTTP server port
 	certsPath = flag.String("grpc-certs-path", "", "Path to the directory containing the grpc certs")
+
+	// Disable authentication
+	// NOT FOR PRODUCTION USE: This flag is provided for used during testing only
+	disableAuth = flag.Bool("disable-auth", false, "Disable authentication")
 
 	version, commit, date = "", "", "" // These are always injected at build time
 )
@@ -59,9 +64,14 @@ func run() error {
 	}
 	log.Info().Msgf("Registered gRPC server endpoint: %s", *grpcServerEndpoint)
 
+	s := &http.Server{
+		Addr:    fmt.Sprintf(":%s", *port),
+		Handler: middlewares.ApplyMiddlewares(mux.ServeHTTP, *disableAuth),
+	}
+
 	// Start HTTP server (and proxy calls to gRPC server endpoint)
 	log.Info().Msgf("Running HTTP server on %s", *port)
-	return http.ListenAndServe(":"+*port, mux)
+	return s.ListenAndServe()
 }
 
 func getDexGrpcCredentials(tlsDir string) (credentials.TransportCredentials, error) {
