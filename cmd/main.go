@@ -29,10 +29,6 @@ var (
 	// HTTP server port
 	certsPath = flag.String("grpc-certs-path", "", "Path to the directory containing the grpc certs")
 
-	// Disable authentication
-	// NOT FOR PRODUCTION USE: This flag is provided for used during testing only
-	disableAuth = flag.Bool("disable-auth", false, "Disable authentication")
-
 	version, commit, date = "", "", "" // These are always injected at build time
 )
 
@@ -57,7 +53,7 @@ func run() error {
 	}
 
 	// Create a gRPC server mux with the custom middlewares
-	mws := middlewares.GetMiddlewares(*disableAuth)
+	mws := middlewares.GetMiddlewares()
 	mux := runtime.NewServeMux(runtime.WithMiddlewares(mws...))
 
 	// Register gRPC server endpoint
