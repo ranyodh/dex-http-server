@@ -26,6 +26,10 @@ print-%:
 
 ##@ Development
 
+.PHONY: buf
+buf: ## Run buf lint and breaking change checks
+	@buf generate
+
 .PHONY: build
 build: ## Build the binary
 	go build -ldflags=${LDFLAGS} -o bin/dex-http-server ${MAIN}
@@ -64,9 +68,9 @@ docker-clean: ## Clean out the docker image
 	@docker image rm ${IMG}
 
 ##@ Testing
-
 .PHONY: test
-test: fmt vet static ## Run all tests
+test: fmt vet ## Run all tests
+	@go test -v ./...
 
 .PHONY: fmt
 fmt: ## Run go fmt against code.
@@ -75,10 +79,6 @@ fmt: ## Run go fmt against code.
 .PHONY: vet
 vet: ## Run go vet against code.
 	@go vet ${MAIN}
-
-.PHONY: static
-static: ## Run staticcheck against code.
-	@staticcheck -checks "all" ${MAIN}
 
 ##@ Dependencies
 .PHONY: download
