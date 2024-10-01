@@ -1,10 +1,9 @@
 MAIN:=cmd/main.go
 
 # LDFLAGS
-VERSION:=
-#VERSION := $(shell git tag --sort=committerdate | tail -1)
-COMMIT := $(shell git rev-parse HEAD)
-DATE := $(shell date -u '+%Y-%m-%d')
+VERSION ?= dev
+COMMIT ?= $(shell git rev-parse HEAD)
+DATE ?= $(shell date -u '+%Y-%m-%d')
 
 LDFLAGS := "-X 'main.version=${VERSION}' \
 			-X 'main.commit=${COMMIT}' \
@@ -18,7 +17,7 @@ help: ## Display this help.
 	@awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make \033[36m<target>\033[0m\n"} /^[a-zA-Z_0-9-]+:.*?##/ { printf "  \033[36m%-15s\033[0m %s\n", $$1, $$2 } /^##@/ { printf "\n\033[1m%s\033[0m\n", substr($$0, 5) } ' $(MAKEFILE_LIST)
 
 .PHONY: all
-all: fmt vet build ## Do all the things
+all: fmt vet lint build ## Do all the things
 
 .PHONY: print-%
 print-%:
@@ -28,7 +27,7 @@ print-%:
 
 .PHONY: buf
 buf: ## Run buf lint and breaking change checks
-	@buf generate
+	@go run github.com/bufbuild/buf/cmd/buf@v1.43.0 generate
 
 .PHONY: build
 build: ## Build the binary
@@ -80,11 +79,17 @@ fmt: ## Run go fmt against code.
 vet: ## Run go vet against code.
 	@go vet ${MAIN}
 
+.PHONY: lint
+lint: ## Run golangci-lint against code.
+	@go run github.com/golangci/golangci-lint/cmd/golangci-lint@v1.61.0 run
+
 ##@ Dependencies
 .PHONY: download
 download:
 	@echo "Download go.mod dependencies"
 	@go mod download
+
+
 
 .PHONY: install-tools
 install-tools: download
