@@ -1,0 +1,24 @@
+name: Publish Helm Chart
+
+on:
+  workflow_call:
+  workflow_dispatch:
+
+jobs:
+  push-helm-chart:
+    name: Push helm chart to ghcr.io
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Push Helm chart
+        uses: bsord/helm-push@v4.1.0
+        with:
+          useOCIRegistry: true
+          registry-url: oci://ghcr.io/mirantiscontainers
+          username: ${{ github.actor }}
+          access-token: ${{ secrets.PAT_CI_BOUNDLESS }}
+          force: true
+          chart-folder: charts/dex-http-server
