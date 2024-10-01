@@ -155,3 +155,9 @@ jobs:
         run: |
           docker tag ${{ env.REGISTRY }}/${{ env.ORG }}/${{ env.IMAGE }}:dev ${{ env.REGISTRY }}/${{ env.ORG }}/${{ env.IMAGE }}:dev
           docker push ${{ env.REGISTRY }}/${{ env.ORG }}/${{ env.IMAGE }}:dev
+
+
+  push-helm-chart:
+    name: Push Helm chart
+    uses: ./.github/workflows/publish-helm-chart.yaml
+    secrets: inherit

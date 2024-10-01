@@ -36,10 +36,3 @@ jobs:
           name: ${{ env.IMAGE }}
           retention-days: 1
           path: /tmp/${{ env.IMAGE }}.tar
-
-      - name: Download artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: ${{ env.IMAGE }}
-          path: /tmp/downloaded
-
